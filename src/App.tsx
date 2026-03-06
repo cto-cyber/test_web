@@ -1,14 +1,118 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google'
 import './App.css'
 
-function App() {
+// Replace these with real IDs when ready
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'
+const FACEBOOK_APP_ID = 'YOUR_FACEBOOK_APP_ID'
+
+declare global {
+  interface Window {
+    FB: {
+      init: (params: { appId: string; cookie: boolean; xfbml: boolean; version: string }) => void
+      login: (callback: (response: { authResponse?: { accessToken: string } }) => void, options: { scope: string }) => void
+      api: (path: string, callback: (response: { name?: string; email?: string }) => void) => void
+    }
+    fbAsyncInit: () => void
+  }
+}
+
+function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
+  const [user, setUser] = useState<{ name: string; email: string; provider: string } | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Login:', { email, password, remember })
+  }
+
+  // Google OAuth
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        })
+        const profile = await res.json()
+        setUser({ name: profile.name, email: profile.email, provider: 'Google' })
+        console.log('Google login success:', profile)
+      } catch (error) {
+        console.error('Google login error:', error)
+        alert('Google login failed. Make sure you have a valid Client ID configured.')
+      }
+    },
+    onError: () => {
+      console.error('Google login failed')
+      alert('Google login failed. Make sure you have a valid Client ID configured.')
+    },
+  })
+
+  // Facebook SDK initialization
+  useEffect(() => {
+    if (document.getElementById('facebook-jssdk')) return
+
+    window.fbAsyncInit = () => {
+      window.FB.init({
+        appId: FACEBOOK_APP_ID,
+        cookie: true,
+        xfbml: true,
+        version: 'v18.0',
+      })
+    }
+
+    const script = document.createElement('script')
+    script.id = 'facebook-jssdk'
+    script.src = 'https://connect.facebook.net/en_US/sdk.js'
+    script.async = true
+    script.defer = true
+    document.body.appendChild(script)
+  }, [])
+
+  const handleFacebookLogin = useCallback(() => {
+    if (!window.FB) {
+      alert('Facebook SDK not loaded. Make sure you have a valid App ID configured.')
+      return
+    }
+    window.FB.login(
+      (response) => {
+        if (response.authResponse) {
+          window.FB.api('/me?fields=name,email', (profile) => {
+            setUser({
+              name: profile.name || 'Facebook User',
+              email: profile.email || '',
+              provider: 'Facebook',
+            })
+            console.log('Facebook login success:', profile)
+          })
+        } else {
+          console.log('Facebook login cancelled')
+        }
+      },
+      { scope: 'email,public_profile' }
+    )
+  }, [])
+
+  // Show logged-in state
+  if (user) {
+    return (
+      <div className="min-h-screen bg-neutral-200 flex items-center justify-center">
+        <div className="w-full max-w-lg bg-white rounded-2xl overflow-hidden p-6">
+          <h1 className="text-2xl font-semibold text-neutral-900 mb-2">
+            Welcome, {user.name}!
+          </h1>
+          <p className="text-sm text-neutral-500 mb-1">Email: {user.email}</p>
+          <p className="text-sm text-neutral-500 mb-4">Signed in via {user.provider}</p>
+          <button
+            onClick={() => setUser(null)}
+            className="w-full py-3 bg-neutral-900 text-white text-sm font-medium rounded-full hover:bg-neutral-800 transition-colors"
+          >
+            Log out
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -84,6 +188,7 @@ function App() {
           {/* Google Button */}
           <button
             type="button"
+            onClick={() => googleLogin()}
             className="w-full py-3 px-4 bg-white border border-neutral-300 rounded-full text-sm font-medium text-neutral-900 hover:bg-neutral-50 active:bg-neutral-100 transition-colors flex items-center justify-center gap-3"
           >
             <svg width="20" height="20" viewBox="0 0 24 24">
@@ -106,9 +211,32 @@ function App() {
             </svg>
             Sign in with <span className="font-semibold">Google</span>
           </button>
+
+          {/* Facebook Button */}
+          <button
+            type="button"
+            onClick={handleFacebookLogin}
+            className="w-full py-3 px-4 bg-white border border-neutral-300 rounded-full text-sm font-medium text-neutral-900 hover:bg-neutral-50 active:bg-neutral-100 transition-colors flex items-center justify-center gap-3"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                fill="#1877F2"
+              />
+            </svg>
+            Sign in with <span className="font-semibold">Facebook</span>
+          </button>
         </div>
       </div>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <LoginForm />
+    </GoogleOAuthProvider>
   )
 }
 
