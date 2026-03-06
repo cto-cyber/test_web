@@ -432,14 +432,18 @@ function ProviderDetailPage({ providerId, onNavigate }: { providerId: string; on
       <section className="mb-10">
         <h2 className="text-xl font-bold text-neutral-900 mb-3">About {provider.name}</h2>
         <p className="text-sm text-neutral-600 leading-relaxed">
-          {showFullDesc ? provider.description : (provider.description?.slice(0, 200) + '...')}
+          {showFullDesc || !provider.description || provider.description.length <= 200
+            ? provider.description
+            : (provider.description.slice(0, 200) + '...')}
         </p>
-        <button
-          onClick={() => setShowFullDesc(!showFullDesc)}
-          className="mt-2 text-sm font-medium text-neutral-900 underline hover:text-neutral-700 transition-colors"
-        >
-          {showFullDesc ? 'Show less' : 'Learn more'}
-        </button>
+        {provider.description && provider.description.length > 200 && (
+          <button
+            onClick={() => setShowFullDesc(!showFullDesc)}
+            className="mt-2 text-sm font-medium text-neutral-900 underline hover:text-neutral-700 transition-colors"
+          >
+            {showFullDesc ? 'Show less' : 'Learn more'}
+          </button>
+        )}
       </section>
 
       <section className="mb-10">
