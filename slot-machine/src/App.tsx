@@ -245,6 +245,7 @@ function App() {
   const [wins, setWins] = useState<WinResult[]>([])
   const [totalWin, setTotalWin] = useState(0)
   const [showWin, setShowWin] = useState(false)
+  const [lastBet, setLastBet] = useState(10)
   const [history, setHistory] = useState<HistoryEntry[]>([])
   const [showPaytable, setShowPaytable] = useState(false)
   const [autoPlay, setAutoPlay] = useState(false)
@@ -294,6 +295,7 @@ function App() {
       const won = results.reduce((sum, w) => sum + w.multiplier * currentBet, 0)
 
       setWins(results)
+      setLastBet(currentBet)
       if (won > 0) {
         setTotalWin(won)
         setBalance(b => b + won)
@@ -450,7 +452,7 @@ function App() {
             {!spinning && wins.length > 0 && (
               <div className="text-yellow-400 font-bold text-base animate-pulse">
                 {wins.map((w, i) => (
-                  <span key={i}>{i > 0 ? ' | ' : ''}{w.count}×{w.symbol} = ${w.multiplier * bet}</span>
+                  <span key={i}>{i > 0 ? ' | ' : ''}{w.count}×{w.symbol} = ${w.multiplier * lastBet}</span>
                 ))}
               </div>
             )}
