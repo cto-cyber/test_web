@@ -6,18 +6,24 @@
   text-align: left;
 }
 
-@keyframes reel-spin {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100%); }
+.reel-viewport {
+  overflow: hidden;
+  position: relative;
 }
 
-.reel-spinning {
-  animation: reel-spin 0.1s linear infinite;
+.reel-strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.reel-strip.spinning {
+  transition: none;
 }
 
 @keyframes win-pulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  50% { transform: scale(1.12); }
 }
 
 .win-animation {
@@ -31,4 +37,13 @@
 
 .coin-fall {
   animation: coin-rain 2s ease-in forwards;
+}
+
+@keyframes glow-line {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.win-line-glow {
+  animation: glow-line 1s ease-in-out infinite;
 }
