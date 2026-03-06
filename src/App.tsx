@@ -25,7 +25,7 @@ function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Login:', { email, password, remember })
+    console.log('Login:', { email, remember })
   }
 
   // Google OAuth
@@ -35,6 +35,7 @@ function LoginForm() {
         const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         })
+        if (!res.ok) throw new Error(`Google API error: ${res.status}`)
         const profile = await res.json()
         setUser({ name: profile.name, email: profile.email, provider: 'Google' })
         console.log('Google login success:', profile)
@@ -172,19 +173,18 @@ function LoginForm() {
               Forgot password
             </a>
           </div>
-        </form>
 
-        {/* Footer */}
-        <div className="px-6 pt-6 pb-6 space-y-3 border-t-0">
           {/* Primary Button */}
           <button
             type="submit"
-            onClick={handleSubmit}
-            className="w-full py-3 bg-neutral-900 text-white text-sm font-medium rounded-full hover:bg-neutral-800 active:bg-neutral-950 transition-colors"
+            className="w-full mt-6 py-3 bg-neutral-900 text-white text-sm font-medium rounded-full hover:bg-neutral-800 active:bg-neutral-950 transition-colors"
           >
-            Primary Action
+            Log in
           </button>
+        </form>
 
+        {/* Social Buttons */}
+        <div className="px-6 pt-3 pb-6 space-y-3">
           {/* Google Button */}
           <button
             type="button"
