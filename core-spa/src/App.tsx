@@ -416,6 +416,8 @@ function ProviderDetailPage({ providerId, onNavigate }: { providerId: string; on
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
+                    if (target.dataset.fallback) return
+                    target.dataset.fallback = 'true'
                     target.src = `https://placehold.co/400x220/${provider.color.replace('#', '')}/ffffff?text=${encodeURIComponent(game.title)}`
                   }}
                 />
