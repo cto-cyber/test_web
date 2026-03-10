@@ -44,10 +44,10 @@ const PROVIDERS: Provider[] = [
 ]
 
 const FEATURED_GAMES: Game[] = [
-  { id: 'bigbass', title: 'Big Bass Bonanza', provider: 'Pragmatic Play', image: 'https://placehold.co/400x220/1a1a2e/white?text=Big+Bass+Bonanza', badge: 'Featured game' },
-  { id: 'wolfgold', title: 'Wolf Gold', provider: 'Pragmatic Play', image: 'https://placehold.co/400x220/e76f51/white?text=Wolf+Gold' },
-  { id: 'sweetbonanza', title: 'Sweet Bonanza', provider: 'Pragmatic Play', image: 'https://placehold.co/400x220/e63946/white?text=Sweet+Bonanza' },
-  { id: 'gateofolympus', title: 'Gates of Olympus', provider: 'Pragmatic Play', image: 'https://placehold.co/400x220/2a9d8f/white?text=Gates+of+Olympus' },
+  { id: 'bigbass', title: 'Big Bass Bonanza', provider: 'Pragmatic Play', image: '/images/game-bigbass.jpg', badge: 'Featured game' },
+  { id: 'wolfgold', title: 'Wolf Gold', provider: 'Pragmatic Play', image: '/images/game-wolfgold.jpg' },
+  { id: 'sweetbonanza', title: 'Sweet Bonanza', provider: 'Pragmatic Play', image: '/images/game-sweetbonanza.jpg' },
+  { id: 'gateofolympus', title: 'Gates of Olympus', provider: 'Pragmatic Play', image: '/images/game-gatesofolympus.jpg' },
 ]
 
 const FAQS: FaqItem[] = [
@@ -91,9 +91,21 @@ function Header({ currentPage, onNavigate, onMenuToggle }: {
           </nav>
 
           <div className="flex items-center gap-3">
+            <button className="hidden md:flex items-center justify-center w-8 h-8 rounded-full hover:bg-neutral-100 transition-colors">
+              <Search className="w-4 h-4 text-neutral-600" />
+            </button>
             <button className="hidden md:flex items-center gap-1.5 text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
               <Globe className="w-4 h-4" />
               <span>ENG</span>
+            </button>
+            <button className="hidden md:inline-flex px-4 py-1.5 text-sm font-medium text-neutral-900 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors">
+              Log in
+            </button>
+            <button className="hidden md:inline-flex px-4 py-1.5 text-sm font-medium text-white bg-neutral-900 rounded-lg hover:bg-neutral-800 transition-colors">
+              Sign up
+            </button>
+            <button className="md:hidden flex items-center justify-center w-8 h-8">
+              <Search className="w-5 h-5 text-neutral-600" />
             </button>
             <button onClick={onMenuToggle} className="md:hidden p-1">
               <Menu className="w-5 h-5 text-neutral-900" />
@@ -136,7 +148,7 @@ function ProviderCard({ provider, onClick }: { provider: Provider; onClick: () =
       className="flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors w-full text-left"
     >
       <div
-        className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0"
+        className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
         style={{ backgroundColor: provider.color }}
       >
         {provider.initial}
@@ -201,11 +213,11 @@ function Breadcrumbs({ items, onNavigate }: { items: { label: string; page?: str
 
 function Footer() {
   return (
-    <footer className="bg-neutral-900 text-white mt-auto">
+    <footer className="bg-neutral-100 border-t border-neutral-200 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-          <span className="text-lg font-bold">Company</span>
-          <button className="flex items-center gap-1.5 text-sm text-neutral-400 hover:text-white transition-colors">
+          <span className="text-lg font-bold text-neutral-900">Company</span>
+          <button className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 transition-colors">
             <Globe className="w-4 h-4" />
             <span>ENG</span>
           </button>
@@ -213,35 +225,35 @@ function Footer() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           <div>
-            <h4 className="text-sm font-semibold mb-3">Catalog</h4>
+            <h4 className="text-sm font-semibold text-neutral-900 mb-3">Catalog</h4>
             <ul className="space-y-2">
-              <li><button className="text-sm text-neutral-400 hover:text-white transition-colors">Providers</button></li>
+              <li><button className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">Providers</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold mb-3">About</h4>
+            <h4 className="text-sm font-semibold text-neutral-900 mb-3">About</h4>
             <ul className="space-y-2">
-              <li><button className="text-sm text-neutral-400 hover:text-white transition-colors">Company</button></li>
-              <li><button className="text-sm text-neutral-400 hover:text-white transition-colors">Contact</button></li>
+              <li><button className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">Company</button></li>
+              <li><button className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">Contact</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold mb-3">Legal</h4>
+            <h4 className="text-sm font-semibold text-neutral-900 mb-3">Legal</h4>
             <ul className="space-y-2">
-              <li><button className="text-sm text-neutral-400 hover:text-white transition-colors">Terms of service</button></li>
-              <li><button className="text-sm text-neutral-400 hover:text-white transition-colors">Privacy policy</button></li>
-              <li><button className="text-sm text-neutral-400 hover:text-white transition-colors">Cookies settings</button></li>
+              <li><button className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">Terms of service</button></li>
+              <li><button className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">Privacy policy</button></li>
+              <li><button className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">Cookies settings</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold mb-3">Follow us</h4>
-            <a href="#" className="inline-flex items-center justify-center w-8 h-8 rounded bg-neutral-800 hover:bg-neutral-700 transition-colors">
-              <Linkedin className="w-4 h-4" />
+            <h4 className="text-sm font-semibold text-neutral-900 mb-3">Follow us</h4>
+            <a href="#" className="inline-flex items-center justify-center w-8 h-8 rounded bg-neutral-900 hover:bg-neutral-700 transition-colors">
+              <Linkedin className="w-4 h-4 text-white" />
             </a>
           </div>
         </div>
 
-        <div className="border-t border-neutral-800 pt-6 text-center">
+        <div className="border-t border-neutral-300 pt-6 text-center">
           <p className="text-xs text-neutral-500 leading-relaxed">
             Gambling can be addictive. Play responsibly. 3PROJECT.com accepts customers only over 18 years of age.
           </p>
@@ -377,7 +389,7 @@ function ProviderDetailPage({ providerId, onNavigate }: { providerId: string; on
 
       <div className="flex flex-col md:flex-row md:items-start gap-6 mb-10">
         <div
-          className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-xl font-bold shrink-0"
+          className="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold shrink-0"
           style={{ backgroundColor: provider.color }}
         >
           {provider.initial}
@@ -398,9 +410,17 @@ function ProviderDetailPage({ providerId, onNavigate }: { providerId: string; on
           {games.map((game) => (
             <div key={game.id} className="group">
               <div className="relative rounded-xl overflow-hidden bg-neutral-100 aspect-video mb-3">
-                <img src={game.image} alt={game.title} className="w-full h-full object-cover" />
+                <img
+                  src={game.image}
+                  alt={game.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.src = `https://placehold.co/400x220/${provider.color.replace('#', '')}/ffffff?text=${encodeURIComponent(game.title)}`
+                  }}
+                />
                 {game.badge && (
-                  <span className="absolute top-3 left-3 px-2 py-1 bg-white rounded text-xs font-medium text-neutral-700">
+                  <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-md text-xs font-medium text-neutral-700">
                     {game.badge}
                   </span>
                 )}
@@ -408,10 +428,10 @@ function ProviderDetailPage({ providerId, onNavigate }: { providerId: string; on
               <h3 className="text-base font-semibold text-neutral-900">{game.title}</h3>
               <div className="flex items-center gap-2 mt-1">
                 {game.badge && <span className="text-xs text-neutral-500">{game.badge}</span>}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <div
-                    className="w-4 h-4 rounded flex items-center justify-center text-white shrink-0"
-                    style={{ backgroundColor: provider.color, fontSize: '6px', fontWeight: 'bold' }}
+                    className="w-5 h-5 rounded-full flex items-center justify-center text-white shrink-0"
+                    style={{ backgroundColor: provider.color, fontSize: '7px', fontWeight: 'bold' }}
                   >
                     {provider.initial}
                   </div>
